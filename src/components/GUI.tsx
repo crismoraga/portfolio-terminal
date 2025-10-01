@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import { portfolioData } from '../data/portfolioData';
 import { FaHome, FaArrowLeft, FaDownload, FaUser, FaCode, FaFolder, FaGraduationCap, 
-         FaBriefcase, FaTools, FaEnvelope, FaCertificate, FaLanguage, FaStar, FaHeart } from 'react-icons/fa';
-import Image from 'next/image';
+         FaBriefcase, FaEnvelope, FaCertificate, FaLanguage, FaStar, FaHeart } from 'react-icons/fa';
 
 interface GUIProps {
   currentPath: string;
@@ -54,7 +53,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ activeContent, previousConten
   </div>
 );
 
-const GUI: React.FC<GUIProps> = ({ currentPath, setCurrentPath }) => {
+const GUI: React.FC<GUIProps> = ({ currentPath: _currentPath, setCurrentPath: _setCurrentPath }) => {
   const [activeContent, setActiveContent] = useState<ContentType>(null);
   const [previousContent, setPreviousContent] = useState<ContentType | null>(null);
   const [selectedProject, setSelectedProject] = useState<typeof portfolioData.projects[0] | null>(null);
@@ -354,9 +353,6 @@ const GUI: React.FC<GUIProps> = ({ currentPath, setCurrentPath }) => {
               </a>
               <a href={portfolioData.contact.github} target="_blank" rel="noopener noreferrer" className="contact-social-link github">
                 GitHub
-              </a>
-              <a href={portfolioData.contact.twitter} target="_blank" rel="noopener noreferrer" className="contact-social-link twitter">
-                Twitter
               </a>
             </div>
           </div>

@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Terminal - Cristóbal Moraga Guerrero
 
-## Getting Started
+Portfolio interactivo con estética de terminal Linux y tema Matrix, desarrollado con Next.js 15 y TypeScript.
 
-First, run the development server:
+## 🚀 Características
+
+- **Interfaz Dual**: Terminal de comandos + Interfaz gráfica
+- **Tema Matrix**: Animaciones y efectos visuales inspirados en The Matrix
+- **Easter Eggs**: Comandos ocultos y sorpresas por descubrir
+- **Responsive**: Diseño adaptable a todos los dispositivos
+- **Sonidos**: Efectos de sonido opcionales para una experiencia inmersiva
+- **TypeScript**: Código type-safe y mantenible
+
+## 🛠️ Tecnologías
+
+- **Next.js 15.2.4** - Framework de React
+- **React 19** - Biblioteca de UI
+- **TypeScript** - Type safety
+- **Tailwind CSS 4** - Estilos utility-first
+- **React Icons** - Iconografía
+
+## 📦 Instalación
 
 ```bash
+# Clonar el repositorio
+git clone https://github.com/crismoraga/portfolio-terminal.git
+
+# Navegar al directorio
+cd portfolio-terminal
+
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000) para ver el resultado.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎮 Comandos Disponibles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Sistema de Archivos
+- `ls` - Lista el contenido del directorio
+- `cd [dir]` - Cambia de directorio
+- `pwd` - Muestra el directorio actual
+- `cat [file]` - Muestra el contenido de un archivo
 
-## Learn More
+### Información Personal
+- `about` - Sobre mí
+- `whoami` - Quién soy
+- `contact` - Información de contacto
+- `cv` / `resume` - Ver currículum completo
 
-To learn more about Next.js, take a look at the following resources:
+### Experiencia y Educación
+- `experience` - Experiencia laboral
+- `education` - Formación académica
+- `ayudantias` / `ta` - Ayudantías
+- `certifications` / `certs` - Certificaciones
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Proyectos y Habilidades
+- `projects` - Mis proyectos
+- `skills` - Habilidades técnicas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Extras
+- `achievements` - Logros destacados
+- `interests` - Intereses personales
+- `extracurricular` - Actividades extracurriculares
 
-## Deploy on Vercel
+### Easter Eggs 🥚
+- `matrix` - Modo Matrix
+- `neofetch` - Información del sistema
+- `cowsay [text]` - Vaca parlante
+- `fortune` - Frase del día
+- `joke` - Chiste geek
+- `sudo [cmd]` - Ejecutar con privilegios (¿o no?)
+- `hack` - Modo hacker
+- `easter` - Lista de easter eggs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Despliegue en Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/crismoraga/portfolio-terminal)
+
+El proyecto está optimizado para deployment en Vercel:
+
+1. Push tu código a GitHub
+2. Importa el proyecto en Vercel
+3. Configura las variables de entorno (si las hay)
+4. Deploy automático
+
+## 📝 Scripts
+
+```bash
+npm run dev      # Ejecutar en modo desarrollo con Turbopack
+npm run build    # Compilar para producción
+npm run start    # Ejecutar servidor de producción
+npm run lint     # Ejecutar linter
+```
+
+## 🎨 Personalización
+
+Los datos del portfolio se encuentran en `src/data/portfolioData.ts`. Actualiza este archivo con tu información personal.
+
+Los temas y estilos se configuran en `src/app/globals.css` usando variables CSS.
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+
+## 👤 Autor
+
+**Cristóbal Moraga Guerrero**
+- GitHub: [@crismoraga](https://github.com/crismoraga)
+- LinkedIn: [cristobalmoraga](https://linkedin.com/in/cristobalmoraga)
+- Email: Cristobal.moragag@gmail.com
+
+## 🙏 Agradecimientos
+
+- Inspirado en terminales Unix/Linux
+- Estética Matrix
+- Comunidad de Next.js y React
+
+---
+
+⭐ Si te gusta este proyecto, ¡dale una estrella en GitHub!

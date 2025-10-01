@@ -21,7 +21,7 @@ const Terminal: React.FC<TerminalProps> = ({ initialMode = 'commands' }) => {
   const [mode, setMode] = useState<TerminalMode>(initialMode);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [currentCommand, setCurrentCommand] = useState<string>('');
-  const [commandOutput, setCommandOutput] = useState<JSX.Element[]>([
+  const [commandOutput, setCommandOutput] = useState<React.ReactElement[]>([
     <div key="welcome" className="command-output">
       <p className="success">¡Bienvenido a mi Portfolio Terminal!</p>
       <p className="mb-2">Soy {portfolioData.name}, {portfolioData.title}.</p>
@@ -119,7 +119,7 @@ const Terminal: React.FC<TerminalProps> = ({ initialMode = 'commands' }) => {
     if (trimmedCommand.split(' ')[0].toLowerCase() !== 'echo' && 
         output.result && 
         React.isValidElement(output.result) && 
-        output.result.props.className === 'error') {
+        (output.result.props as { className?: string }).className === 'error') {
       errorSound.play();
     }
 
@@ -280,10 +280,6 @@ const Terminal: React.FC<TerminalProps> = ({ initialMode = 'commands' }) => {
 
   const toggleTheme = () => {
     setTheme(theme === 'default' ? 'dark' : 'default');
-  };
-
-  const openInterface = () => {
-    setMode('interface');
   };
 
   return (

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import SoundProvider from "@/contexts/SoundContext";
 import "./globals.css";
@@ -18,7 +18,11 @@ export const metadata: Metadata = {
   description: "Un portafolio interactivo con estilo terminal Matrix",
   keywords: ["desarrollador", "portfolio", "terminal", "matrix", "programación", "full stack"],
   authors: [{ name: "Cristóbal Moraga G." }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
