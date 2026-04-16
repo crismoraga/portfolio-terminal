@@ -153,7 +153,11 @@ const Terminal: React.FC<TerminalProps> = ({ initialMode = 'commands' }) => {
       'help', 'clear', 'ls', 'cd', 'pwd', 'cat', 'about', 
       'skills', 'projects', 'contact', 'education', 'experience',
       'whoami', 'date', 'echo', 'matrix', 'certifications', 'languages',
-      'achievements', 'interests'
+      'achievements', 'interests', 'github', 'repos', 'stats', 'roadmap',
+      'competencias', 'competencies', 'aptitudes', 'cv', 'resume',
+      'ta', 'ayudantias', 'extracurricular', 'certs', 'downloadcv',
+      'sudo', 'hack', 'hackthematrix', 'neofetch', 'cowsay', 'fortune',
+      'joke', 'banner', 'ascii', 'scan', 'quote', 'easter', 'easteregg', 'secret'
     ];
     
     if (!partial) return [];
@@ -171,7 +175,7 @@ const Terminal: React.FC<TerminalProps> = ({ initialMode = 'commands' }) => {
     if (partial.startsWith('cat ')) {
       const files = ['about.md', 'skills.json'];
       if (currentPath === '~/proyectos') {
-        files.push(...portfolioData.projects.map(p => `${p.name.replace(/\s+/g, '_')}.md`));
+        files.push(...portfolioData.projects.map(p => `${p.name}.md`));
       }
       const partialFile = partial.substring(4).trim();
       return files

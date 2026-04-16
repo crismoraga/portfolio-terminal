@@ -1,6 +1,6 @@
 # Portfolio Terminal - Cristóbal Moraga Guerrero
 
-Portfolio interactivo con estética de terminal Linux y tema Matrix, desarrollado con Next.js 15 y TypeScript.
+Portfolio interactivo con estética de terminal Linux y tema Matrix, desarrollado con Next.js 16 y TypeScript.
 
 ## 🚀 Características
 
@@ -13,7 +13,7 @@ Portfolio interactivo con estética de terminal Linux y tema Matrix, desarrollad
 
 ## 🛠️ Tecnologías
 
-- **Next.js 15.2.4** - Framework de React
+- **Next.js 16.2.4** - Framework de React
 - **React 19** - Biblioteca de UI
 - **TypeScript** - Type safety
 - **Tailwind CSS 4** - Estilos utility-first
@@ -94,6 +94,7 @@ npm run dev      # Ejecutar en modo desarrollo con Turbopack
 npm run build    # Compilar para producción
 npm run start    # Ejecutar servidor de producción
 npm run lint     # Ejecutar linter
+npm run verify   # Ejecutar lint + build
 ```
 
 ## 🎨 Personalización

@@ -10,6 +10,10 @@ const JOKES = ['¿Modo oscuro? La luz atrae bugs!', 'Un SQL entra a un bar y pre
 const QUOTES = ['La seguridad no es un producto, es un proceso. – B. Schneier', 'Talk is cheap. Show me the code. – Linus Torvalds', 'First, solve the problem. Then, write the code.', 'La automatización libera tu mente para la creatividad.'];
 
 class CommandProcessor {
+  private static normalizeProjectName(value: string): string {
+    return value.trim().toLowerCase().replace(/[\s_-]+/g, '');
+  }
+
   static process(command: string, currentPath: string): CommandOutput {
     const args = command.trim().split(/\s+/).filter(Boolean);
     const cmd = (args[0] || '').toLowerCase();
@@ -43,6 +47,10 @@ class CommandProcessor {
       case 'date': return this.date();
       case 'echo': return this.echo(args.slice(1).join(' '));
       case 'downloadcv': return this.downloadCv();
+      case 'github': return this.github();
+      case 'repos': return this.repos();
+      case 'stats': return this.stats();
+      case 'roadmap': return this.roadmap();
       case 'matrix': return this.matrix();
       case 'sudo': return this.sudo(args.slice(1).join(' '));
       case 'hack':
@@ -57,12 +65,13 @@ class CommandProcessor {
       case 'ascii': return this.ascii(args.slice(1).join(' '));
       case 'scan': return this.scan();
       case 'quote': return this.quote();
-      default: return cmd ? { result: <p className="error">Comando no reconocido: {cmd}. Escribe 'help'.</p> } : { result: <></> };
+      case 'secret': return this.secret();
+      default: return cmd ? { result: <p className="error">Comando no reconocido: {cmd}. Escribe &quot;help&quot;.</p> } : { result: <></> };
     }
   }
 
   // ----- Básicos -----
-  static help(): CommandOutput { return { result: <div className="font-mono text-xs"><p className="success">SISTEMA: help clear ls cd pwd cat</p><p className="success">PERSONAL: about whoami contact cv</p><p className="success">CARRERA: experience education projects skills certifications ayudantias extracurricular</p><p className="success">PERFIL: achievements interests languages competencias aptitudes</p><p className="success">UTILS: date echo downloadcv</p><p className="success">FUN: matrix sudo hack neofetch cowsay fortune joke banner ascii scan quote easter</p></div> }; }
+  static help(): CommandOutput { return { result: <div className="font-mono text-xs"><p className="success">SISTEMA: help clear ls cd pwd cat</p><p className="success">PERSONAL: about whoami contact cv github repos stats</p><p className="success">CARRERA: experience education projects skills certifications ayudantias extracurricular roadmap</p><p className="success">PERFIL: achievements interests languages competencias aptitudes</p><p className="success">UTILS: date echo downloadcv</p><p className="success">FUN: matrix sudo hack neofetch cowsay fortune joke banner ascii scan quote easter secret</p></div> }; }
   static clear(): CommandOutput { return { result: <></> }; }
   static pwd(path: string): CommandOutput { return { result: <p>{path}</p> }; }
   static echo(text: string): CommandOutput { return { result: <p>{text}</p> }; }
@@ -70,9 +79,53 @@ class CommandProcessor {
   static whoami(): CommandOutput { return { result: <p>{portfolioData.name}</p> }; }
 
   // ----- FS Simulado -----
-  static ls(path: string): CommandOutput { const root = [<p key="a">about.md</p>, <p key="p">proyectos/</p>, <p key="c">contacto/</p>, <p key="e1">educacion/</p>, <p key="e2">experiencia/</p>, <p key="s">skills.json</p>]; const content = path === '~' ? root : path === '~/proyectos' ? portfolioData.projects.map((p,i)=><p key={i}>{p.name}.md</p>) : []; return { result: <div className="grid grid-cols-3 gap-1">{content}</div> }; }
+  static ls(path: string): CommandOutput { const root = [<p key="a">about.md</p>, <p key="p">proyectos/</p>, <p key="c">contacto/</p>, <p key="e1">educacion/</p>, <p key="e2">experiencia/</p>, <p key="ta">ayudantias/</p>, <p key="s">skills.json</p>]; const content = path === '~' ? root : path === '~/proyectos' ? portfolioData.projects.map((p,i)=><p key={i}>{p.name}.md</p>) : []; return { result: <div className="grid grid-cols-3 gap-1">{content}</div> }; }
   static cd(dir: string, currentPath: string): CommandOutput { if (dir === '~' || dir === '/') return { result: <></>, newPath: '~' }; if (dir === '..') { if (currentPath === '~') return { result: <p className="error">Ya estás en el directorio raíz</p>, newPath: '~' }; const parts = currentPath.split('/'); parts.pop(); return { result: <></>, newPath: parts.join('/') }; } if (dir === 'proyectos' && currentPath === '~') return { result: <></>, newPath: '~/proyectos' }; return { result: <p className="error">Directorio no encontrado: {dir}</p> }; }
-  static cat(filename: string | undefined, path: string): CommandOutput { if (!filename) return { result: <p className="error">Debes especificar un archivo</p> }; if (filename === 'about.md' && path === '~') return this.about(); if (filename === 'skills.json' && path === '~') return { result: <pre className="text-[10px]">{JSON.stringify(portfolioData.skills, null, 2)}</pre> }; if (path === '~/proyectos' && filename.endsWith('.md')) { const project = portfolioData.projects.find(p => p.name === filename.replace('.md','')); if (project) return { result: <div><h2 className="text-lg success mb-1">{project.name}</h2><p>{project.description}</p><p className="mb-1">Tech: {project.technologies.join(', ')}</p><a className="clickable" href={project.url} target="_blank" rel="noopener noreferrer">Ver →</a></div> }; } return { result: <p className="error">Archivo no encontrado: {filename}</p> }; }
+  static cat(filename: string | undefined, path: string): CommandOutput {
+    if (!filename) {
+      return { result: <p className="error">Debes especificar un archivo</p> };
+    }
+
+    if (filename === 'about.md' && path === '~') {
+      return this.about();
+    }
+
+    if (filename === 'skills.json' && path === '~') {
+      return { result: <pre className="text-[10px]">{JSON.stringify(portfolioData.skills, null, 2)}</pre> };
+    }
+
+    if (path === '~/proyectos' && filename.endsWith('.md')) {
+      const lookup = this.normalizeProjectName(filename.replace('.md', ''));
+      const project = portfolioData.projects.find(
+        (item) => this.normalizeProjectName(item.name) === lookup,
+      );
+
+      if (project) {
+        return {
+          result: (
+            <div>
+              <h2 className="text-lg success mb-1">{project.name}</h2>
+              <p>{project.description}</p>
+              <p className="mb-1">Tech: {project.technologies.join(', ')}</p>
+              <a className="clickable" href={project.url} target="_blank" rel="noopener noreferrer">
+                Ver repo →
+              </a>
+              {project.demoUrl && (
+                <p className="text-xs mt-1">
+                  Demo:{' '}
+                  <a className="clickable" href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                    Abrir
+                  </a>
+                </p>
+              )}
+            </div>
+          ),
+        };
+      }
+    }
+
+    return { result: <p className="error">Archivo no encontrado: {filename}</p> };
+  }
 
   // ----- Datos CV -----
   static about(): CommandOutput { return { result: <div><h2 className="text-lg success mb-1">Sobre Mí</h2><p>{portfolioData.about}</p></div> }; }
@@ -90,6 +143,10 @@ class CommandProcessor {
   static competencies(): CommandOutput { const comp = portfolioData.technicalCompetencies || {}; return { result: <div><h2 className="text-lg success mb-1">Competencias Técnicas</h2>{Object.entries(comp).map(([area, items],i)=><div key={i} className="mb-2"><h3 className="warning text-sm">{area}</h3><ul className="list-disc pl-4 text-xs">{(items as string[]).map((it,k)=><li key={k}>{it}</li>)}</ul></div>)}</div> }; }
   static aptitudes(): CommandOutput { const list = portfolioData.aptitudes || []; return { result: <div><h2 className="text-lg success mb-1">Aptitudes</h2><ul className="list-disc pl-4 text-xs">{list.map((v,i)=><li key={i}>{v}</li>)}</ul></div> }; }
   static resume(): CommandOutput { return { result: <div><h2 className="text-lg success mb-1">📄 Currículum - {portfolioData.name}</h2><p className="text-xs">Email: {portfolioData.contact.email} · Tel: {portfolioData.contact.phone}</p><p className="text-xs">Ubicación: {portfolioData.contact.location}</p><p className="text-xs mt-1">{portfolioData.about}</p><p className="dim text-[10px] mt-1">experience education projects skills competencias aptitudes</p></div> }; }
+  static github(): CommandOutput { return { result: <div><h2 className="text-lg success mb-1">GitHub</h2><p className="text-xs">Perfil: <a className="clickable" href={portfolioData.contact.github} target="_blank" rel="noopener noreferrer">{portfolioData.contact.github}</a></p><p className="text-xs mt-1">Tip: usa <span className="warning">repos</span> para ver repositorios destacados.</p></div> }; }
+  static repos(): CommandOutput { return { result: <div><h2 className="text-lg success mb-1">Repositorios Destacados</h2><ul className="list-disc pl-4 text-xs">{portfolioData.projects.map((project, index)=><li key={index}><a className="clickable" href={project.url} target="_blank" rel="noopener noreferrer">{project.name}</a> — {project.technologies.slice(0, 3).join(', ')}</li>)}</ul></div> }; }
+  static stats(): CommandOutput { return { result: <div className="font-mono text-xs"><p>Proyectos destacados: {portfolioData.projects.length}</p><p>Experiencias profesionales: {portfolioData.experience.length}</p><p>Ayudantías: {portfolioData.teachingAssistant.length}</p><p>Tecnologías listadas: {Object.values(portfolioData.skills).flat().length}</p><p>Certificaciones: {portfolioData.certifications.length}</p></div> }; }
+  static roadmap(): CommandOutput { return { result: <div><h2 className="text-lg success mb-1">Roadmap 2026</h2><ul className="list-disc pl-4 text-xs"><li>Escalar proyectos de IA aplicada con foco en confiabilidad y evaluación.</li><li>Fortalecer perfil de ciberseguridad ofensiva/defensiva y cloud security.</li><li>Consolidar contribuciones open source y documentación técnica.</li><li>Seguir apoyando docencia TEL341/TEL354 con laboratorios prácticos.</li></ul></div> }; }
 
   // ----- Fun / utilidades -----
   static matrix(): CommandOutput { return { result: <pre className="text-[10px] leading-3">{Array.from({length:8}).map((_,i)=><div key={i}>{Array.from({length:56}).map((_,j)=><span key={j}>{String.fromCharCode(0x30A0 + Math.floor(Math.random()*96))}</span>)}</div>)}</pre> }; }
@@ -104,6 +161,7 @@ class CommandProcessor {
   static ascii(text:string): CommandOutput { const input=(text||'CRISTOBAL').toUpperCase().slice(0,12); const map:Record<string,string[]>= {A:[' ██ ','█  █','████','█  █','█  █'],B:['███ ','█  █','███ ','█  █','███ '],C:[' ██ ','█  █','█   ','█  █',' ██ '],D:['███ ','█  █','█  █','█  █','███ '],E:['████','█   ','███ ','█   ','████'],L:['█   ','█   ','█   ','█   ','████'],O:[' ██ ','█  █','█  █','█  █',' ██ '],R:['███ ','█  █','███ ','█ █ ','█  █'],S:[' ███','█   ',' ██ ','   █','███ '],T:['████',' █  ',' █  ',' █  ',' █  '],I:['███',' █ ',' █ ',' █ ','███'],M:['█  █','██ ██','█ █ █','█   █','█   █'],G:[' ██ ','█  █','█ ██','█  █',' ███'],U:['█  █','█  █','█  █','█  █',' ██ '],' ':['  ','  ','  ','  ','  ']}; const rows=[0,1,2,3,4].map(r=>input.split('').map(ch=>(map[ch]||map[' '])[r]).join('  ')); return { result:<pre className="text-[10px] leading-4">{rows.join('\n')}</pre> }; }
   static scan(): CommandOutput { const hosts=['github.com','linkedin.com','localhost','portfolio.local']; return { result:<div className="font-mono text-[10px]"><p>Iniciando escaneo pseudo-nmap...</p><pre>{hosts.map(h=>`${h} -> 22(open) 80(open) 443(open) 1337(filtered)`).join('\n')}</pre><p className="success mt-1">Completado ✔</p></div> }; }
   static easterEgg(): CommandOutput { const eggs=['Konami Code (↑↑↓↓←→←→BA)','matrix','hack','cowsay','sudo echo hola','ascii CRISTOBAL']; return { result:<div><h2 className="text-lg success mb-1">🎮 Easter Eggs</h2><ul className="list-disc pl-4 text-xs">{eggs.map((e,i)=><li key={i}>{e}</li>)}</ul></div> }; }
+  static secret(): CommandOutput { return { result:<div className="text-xs"><p className="success">🕵️ Has encontrado un comando oculto.</p><p className="warning">La mejor vulnerabilidad es la que prevenimos antes del deploy.</p><p className="dim">Pista: prueba <span className="success">quote</span> y <span className="success">roadmap</span>.</p></div> }; }
   static downloadCv(): CommandOutput { return { result:<p className="text-xs">Descargar CV: <a className="clickable" href="/CV Cristóbal Moraga G..pdf" download>CV PDF</a></p> }; }
 }
 

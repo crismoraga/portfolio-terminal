@@ -11,7 +11,7 @@ interface GUIProps {
 }
 
 type ContentType = 'about' | 'projects' | 'contact' | 'education' | 'experience' | 
-                 'skills' | 'certifications' | 'languages' | 'achievements' | 'interests' | 'project-details' | null;
+                 'skills' | 'certifications' | 'languages' | 'achievements' | 'interests' | 'teachingAssistant' | 'project-details' | null;
 
 interface BreadcrumbsProps {
   activeContent: ContentType;
@@ -299,14 +299,16 @@ const GUI: React.FC<GUIProps> = ({ currentPath: _currentPath, setCurrentPath: _s
                 >
                   Ver código fuente
                 </a>
-                <a 
-                  href={selectedProject.url.replace('github.com', 'demo.com')} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="project-link demo"
-                >
-                  Ver demo en vivo
-                </a>
+                {selectedProject.demoUrl && (
+                  <a 
+                    href={selectedProject.demoUrl}
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="project-link demo"
+                  >
+                    Ver demo en vivo
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -451,6 +453,28 @@ const GUI: React.FC<GUIProps> = ({ currentPath: _currentPath, setCurrentPath: _s
                       </ul>
                     </div>
                   )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (activeContent === 'teachingAssistant') {
+      return (
+        <div className="section">
+          <h2 className="section-title">Ayudantías</h2>
+
+          <div className="experience-timeline">
+            {portfolioData.teachingAssistant.map((ta, index) => (
+              <div key={index} className={`experience-item ${index === 0 ? 'active' : ''}`}>
+                <div className="experience-marker"></div>
+                <div className="experience-content">
+                  <div className="experience-period">{ta.period}</div>
+                  <h3 className="experience-position">{ta.course}</h3>
+                  <div className="experience-company">{ta.institution}</div>
+                  <p className="experience-description"><strong>{ta.role}:</strong> {ta.description}</p>
                 </div>
               </div>
             ))}
@@ -611,6 +635,10 @@ const GUI: React.FC<GUIProps> = ({ currentPath: _currentPath, setCurrentPath: _s
             <div className="menu-card" onClick={() => navigateTo('education')}>
               <FaGraduationCap className="menu-icon" />
               <span className="menu-label">Educación</span>
+            </div>
+            <div className="menu-card" onClick={() => navigateTo('teachingAssistant')}>
+              <FaGraduationCap className="menu-icon" />
+              <span className="menu-label">Ayudantías</span>
             </div>
             <div className="menu-card" onClick={() => navigateTo('certifications')}>
               <FaCertificate className="menu-icon" />
